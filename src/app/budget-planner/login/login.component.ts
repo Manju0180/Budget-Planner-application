@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -28,7 +28,7 @@ ngOnInit() {
   this.registerForm = this.fb.group({
     username: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', [Validators.required, Validators.minLength(5)]]
   });
 }
 
@@ -37,10 +37,14 @@ toggleForm(form: 'login' | 'register') {
 }
 
 login() {
+  if (this.loginForm.invalid) {
+    this.markFormGroupTouched(this.loginForm);
+    return;
+  }
   if (this.loginForm.valid) {
     console.log("Login info==>", this.loginForm.value);
     this.router.navigate(['/budget-planner/dashboard']);
-  } else {
+  } else{
     this.snackBar.open('Invalid email or password!', 'Close', { duration: 3000 });
   }
 }
@@ -54,6 +58,12 @@ register() {
   } else {
     this.snackBar.open('Please fill in all fields correctly!', 'Close', { duration: 3000 });
   }
+}
+
+private markFormGroupTouched(formGroup: FormGroup) {
+  Object.keys(formGroup.controls).forEach(key => {
+    formGroup.get(key)?.markAsTouched();
+  });
 }
 
 
