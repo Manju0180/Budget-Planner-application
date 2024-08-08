@@ -21,18 +21,4 @@ export class AppComponent {
     }
   }
   title = 'budget-planner';
-
-  dataSaved = false;
-
-  onSaveData() {
-    this.dataSaved = true; // Call this when data is saved
-  }
-
-  canDeactivate() {
-    if (this.dataSaved) {
-      return confirm('If you go back, the saved data will be lost. Do you want to proceed?');
-    } else {
-      return true; // Allow navigation if no data is saved
-    }
-  }
 }
